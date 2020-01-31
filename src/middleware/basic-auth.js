@@ -13,7 +13,8 @@ function requireAuth(req, res, next) {
   const [tokenUserName, tokenPassword] = AuthService.parseBasicToken(basicToken)
 
   if (!tokenUserName || !tokenPassword) {
-    return res.status(401).json({ error: 'Unauthorized request' })
+   
+   return res.status(401).json({ error: 'Unauthorized request' })
   }
 
   AuthService.getUserWithUserName(
@@ -21,15 +22,18 @@ function requireAuth(req, res, next) {
     tokenUserName
   )
     .then(user => {
+    
       if (!user || user.password !== tokenPassword) {
+
         return res.status(401).json({ error: 'Unauthorized request' })
       }
-
+     
+      req.user = user;
       next()
     })
     .catch(next)
 }
 
 module.exports = {
-  requireAuth,
+  requireAuth
 }
